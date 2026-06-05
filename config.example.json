@@ -20,16 +20,7 @@
     "exportExcel": true,
     "writeFeishu": false,
     "enrichProductMetrics": true,
-    "useSorftime": false
+    "useSorftime": true
   },
-  "products": [
-    {
-      "label": "SD3 Pivot Shower Door",
-      "asin": "B0XXXXXXXXX",
-      "keywords": [
-        "pivot shower door",
-        "38 inch shower door"
-      ]
-    }
-  ]
+  "products": []
 }

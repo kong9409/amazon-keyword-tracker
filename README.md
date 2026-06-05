@@ -7,7 +7,7 @@
 - 当天价格
 - BSR / 类目排名
 - 评分 / 评论数
-- 可选：通过 Sorftime MCP 补销量、类目数据
+- 通过 Sorftime MCP 补齐销量、销售额、类目、价格等字段
 - 可选：写入飞书多维表
 - 默认：导出 Excel
 
@@ -94,8 +94,6 @@ git push -u origin main
 6. 在服务里绑定域名或使用 Zeabur 默认域名
 7. 打开链接即可使用
 
-Zeabur 官方文档说明：项目根目录存在 `Dockerfile` 时会自动按 Docker 方式部署，并且需要暴露对应 `PORT`；GitHub 集成则是在授权后选择仓库部署。
-
 ---
 
 ## 5. Zeabur 环境变量
@@ -112,13 +110,28 @@ FEISHU_TABLE_ID=tblxxxxxxxxxxxxxxxx
 FEISHU_OPEN_BASE=https://open.feishu.cn
 ```
 
-可选变量：
+如果要调用 Sorftime MCP，添加下面两种方式之一。推荐方式 A：
+
+```env
+# 方式 A：完整 MCP URL
+SORFTIME_MCP_URL=https://mcp.sorftime.com?key=你的SorftimeKey
+```
+
+或者：
+
+```env
+# 方式 B：只填 KEY，工具自动拼接 URL
+SORFTIME_MCP_KEY=你的SorftimeKey
+```
+
+其他可选变量：
 
 ```env
 PORT=8787
 HEADFUL=false
-SORFTIME_COMMAND=
 ```
+
+重要：不要把真实 Sorftime Key、飞书 App Secret 写入 GitHub。只放到 Zeabur Variables 或本地 `.env`。
 
 ---
 
@@ -130,56 +143,40 @@ SORFTIME_COMMAND=
 feishu_table_fields.csv
 ```
 
-字段建议：
+本版已新增 Sorftime 字段：
 
-- 日期
-- 站点
-- 产品标签
-- ASIN
-- 关键词
-- 自然是否上榜
-- 自然页码
-- 自然排名
-- 广告是否上榜
-- 广告页码
-- 广告排名
-- 价格
-- 销量
-- BSR
-- 类目排名
-- 评分
-- 评论数
-- 商品链接
-- 搜索链接
-- 抓取时间
-- 备注
+- 货币
+- 日销量
+- 周销量
+- 月销量
+- 月销售额
+- 类目名称
+- Sorftime工具
+- Sorftime原始摘要
+
+如果你不想保留原始摘要，可以在飞书表里不建 `Sorftime原始摘要` 字段，或者在后续版本里删除对应映射。
 
 ---
 
-## 7. Sorftime MCP 对接方式
+## 7. Sorftime MCP 对接逻辑
 
-当前工具预留了 `SORFTIME_COMMAND`。你需要把 Sorftime MCP 查询封装成一个本地命令，让它接收 ASIN 和站点并返回 JSON。
+点击页面里的“调用 Sorftime MCP 补销量/类目数据”后，工具会：
 
-期望返回格式示例：
+1. 使用 `SORFTIME_MCP_URL` 或 `SORFTIME_MCP_KEY` 连接 Sorftime MCP。
+2. 自动执行 MCP `initialize`。
+3. 自动读取 `tools/list`。
+4. 从 MCP 工具列表里自动选择最像“ASIN / Product / Sales / Price / Rank / BSR”的工具。
+5. 根据工具 inputSchema 自动填入 `asin`、`marketplace`、`domain`、`locale` 等参数。
+6. 把返回结果归一化成 Excel / 飞书字段。
 
-```json
-{
-  "asin": "B0XXXXXXXXX",
-  "price": 129.99,
-  "sales": 120,
-  "bsr": "#3456 in Tools & Home Improvement",
-  "categoryRank": 3456,
-  "rating": 4.6,
-  "reviewCount": 88,
-  "source": "sorftime"
-}
-```
+由于 Sorftime MCP 返回字段可能会随着工具版本变化，本工具保留了 `Sorftime原始摘要`，方便你确认返回字段并继续微调映射。
 
 ---
 
 ## 8. 使用建议
 
 1. 首次测试：1 个 ASIN + 1 个关键词 + 搜索深度 1 + 只下载 Excel。
-2. 跑通后再打开“写入飞书”。
-3. Amazon 前台可能出现验证码、风控、地区差异或广告实时变化，工具会记录备注；不要用它绕过验证码或访问限制。
-4. 销量不是 Amazon 前台稳定公开字段，建议通过 Sorftime MCP 补齐。
+2. 勾选“调用 Sorftime MCP 补销量/类目数据”。
+3. 如果 Excel 里 `Sorftime工具` 有值，说明 MCP 已经调用成功。
+4. 跑通后再打开“写入飞书”。
+5. Amazon 前台可能出现验证码、风控、地区差异或广告实时变化，工具会记录备注；不要用它绕过验证码或访问限制。

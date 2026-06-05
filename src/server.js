@@ -171,10 +171,10 @@ app.post('/api/test-excel', express.json(), (req, res) => {
   const date = todayLocal();
   const stamp = new Date().toISOString().replace(/[:.]/g, '-');
   const sample = [{
-    date, site: 'Amazon US', productLabel: '测试产品', asin: 'B0TEST0000', keyword: 'test keyword', maxPages: 1,
-    productUrl: 'https://www.amazon.com/dp/B0TEST0000', searchUrl: 'https://www.amazon.com/s?k=test+keyword', capturedAt: new Date().toISOString(),
+    date, site: 'Amazon US', productLabel: 'Dog Crate Furniture Example', asin: 'ASIN_PLACEHOLDER', keyword: 'dog crate furniture', maxPages: 1,
+    productUrl: 'https://www.amazon.com/dp/ASIN_PLACEHOLDER', searchUrl: 'https://www.amazon.com/s?k=dog+crate+furniture', capturedAt: new Date().toISOString(),
     organic: { found: true, page: 1, rank: 12 }, ad: { found: false, page: null, rank: null },
-    price: 99.99, sales: '', bsr: '#123 in Tools & Home Improvement', categoryRank: 123, rating: 4.6, reviewCount: 88, source: 'self_test', note: '这是测试行，不是真实抓取。'
+    price: 99.99, currency: 'USD', sales: 120, dailySales: 4, weeklySales: 28, monthlySales: 120, revenue: 11998.8, bsr: '#123 in Tools & Home Improvement', categoryRank: 123, categoryName: 'Tools & Home Improvement', rating: 4.6, reviewCount: 88, source: 'self_test', sorftimeTool: 'self_test', note: '这是测试行，不是真实抓取。'
   }];
   const excelFile = `self_test_${date}_${stamp}.xlsx`;
   exportResultsToExcel(sample, path.join(root, 'output', excelFile));

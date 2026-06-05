@@ -179,8 +179,14 @@ export async function runTracker(config, products, log = console.log) {
       metrics = await getAmazonProductMetrics(page, config, product.asin);
       log(`   商品指标：价格 ${metrics.price ?? ''} | BSR ${metrics.categoryRank ?? ''} | 评论 ${metrics.reviewCount ?? ''}`, { type: 'stepComplete' });
       if (config.output?.useSorftime) {
-        const s = await querySorftimeMetrics({ asin: product.asin, marketplace: config.marketplace });
-        if (s) metrics = { ...metrics, ...Object.fromEntries(Object.entries(s).filter(([, v]) => v !== null && v !== '')) };
+        log(`   Sorftime MCP：补充销量/价格/类目排名`);
+        const s = await querySorftimeMetrics({ asin: product.asin, marketplace: config.marketplace, log });
+        if (s) {
+          const currentNote = metrics.note || '';
+          metrics = { ...metrics, ...Object.fromEntries(Object.entries(s).filter(([, v]) => v !== null && v !== undefined && v !== '')) };
+          metrics.note = [currentNote, s.note].filter(Boolean).join('；');
+          if (s.source === 'sorftime_mcp') metrics.source = 'mixed+sorftime_mcp';
+        }
       }
       productMetricsCache.set(product.asin, metrics);
     }

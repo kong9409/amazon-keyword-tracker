@@ -53,16 +53,16 @@
       </div>
       <div class="choice-row">
         <label><input type="checkbox" name="enrichProductMetrics" checked> 抓取当天价格、BSR、评分、评论数</label>
-        <label><input type="checkbox" name="useSorftime"> 调用 Sorftime MCP 补销量/类目数据</label>
+        <label><input type="checkbox" name="useSorftime"> 调用 Sorftime MCP 补销量/价格/类目排名</label>
       </div>
 
       <h2>3. 手动输入</h2>
       <div class="grid two">
         <label>ASIN，可多行；支持 “产品标签,ASIN”
-          <textarea name="asinText" placeholder="SD3 Pivot Shower Door,B0XXXXXXXXX&#10;Socket Fan Light,B0YYYYYYYYY"></textarea>
+          <textarea name="asinText" placeholder="示例：产品标签,ASIN；也可以只填 ASIN，一行一个"></textarea>
         </label>
         <label>关键词，一行一个
-          <textarea name="keywordText" placeholder="pivot shower door&#10;38 inch shower door&#10;brushed nickel shower door"></textarea>
+          <textarea name="keywordText" placeholder="dog crate furniture&#10;wooden dog crate furniture&#10;dog furniture"></textarea>
         </label>
       </div>
 

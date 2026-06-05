@@ -67,9 +67,15 @@ export function feishuFieldsFromResult(config, item) {
     [f('adPage')]: item.ad?.found ? item.ad.page : null,
     [f('adRank')]: item.ad?.found ? item.ad.rank : null,
     [f('price')]: item.price ?? null,
+    [f('currency')]: item.currency ?? '',
     [f('sales')]: item.sales ?? null,
+    [f('dailySales')]: item.dailySales ?? null,
+    [f('weeklySales')]: item.weeklySales ?? null,
+    [f('monthlySales')]: item.monthlySales ?? null,
+    [f('revenue')]: item.revenue ?? null,
     [f('bsr')]: item.bsr ?? '',
     [f('categoryRank')]: item.categoryRank ?? null,
+    [f('categoryName')]: item.categoryName ?? '',
     [f('rating')]: item.rating ?? null,
     [f('reviewCount')]: item.reviewCount ?? null,
     [f('maxPages')]: item.maxPages,
@@ -77,6 +83,8 @@ export function feishuFieldsFromResult(config, item) {
     [f('searchUrl')]: item.searchUrl,
     [f('capturedAt')]: item.capturedAt,
     [f('source')]: item.source || 'amazon_frontend',
+    [f('sorftimeTool')]: item.sorftimeTool || '',
+    [f('sorftimeRawSummary')]: item.sorftimeRawSummary || '',
     [f('note')]: item.note || ''
   };
 }
