@@ -1,0 +1,22 @@
+{
+  "name": "amazon-keyword-tracker-zeabur-feishu",
+  "version": "3.0.0",
+  "description": "Amazon ASIN keyword organic/ad rank tracker with progress UI, Excel export, Feishu Bitable write, Zeabur Docker deployment, and optional Sorftime MCP enrichment.",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js",
+    "run": "node src/server.js --once",
+    "install-browser": "npx playwright install chromium",
+    "doctor": "node -e \"import('./src/browser.js').then(m=>console.log(m.browserStatus()))\""
+  },
+  "dependencies": {
+    "express": "latest",
+    "multer": "latest",
+    "node-cron": "latest",
+    "playwright": "latest",
+    "xlsx": "latest"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
