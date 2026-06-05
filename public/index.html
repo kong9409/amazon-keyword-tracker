@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Amazon 关键词自然位/广告位监控</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <main class="wrap">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">Amazon Keyword Rank Tracker</p>
+        <h1>Amazon 关键词排名监控</h1>
+        <p>点开 Zeabur 链接即可用。后台隐藏浏览器抓取，前台只显示进度条；支持多站点、多 ASIN、多关键词，结果可下载 Excel 或写入飞书多维表。</p>
+      </div>
+      <div class="links">
+        <span id="healthBadge" class="badge">检测服务中...</span>
+        <a href="/templates/asin_template.csv">ASIN模板</a>
+        <a href="/templates/keyword_template.csv">关键词模板</a>
+        <a href="/templates/product_keyword_pair_template.csv">产品-关键词模板</a>
+      </div>
+    </section>
+
+    <form id="runForm" class="card">
+      <h2>1. 站点和地区</h2>
+      <div class="grid five">
+        <label>站点
+          <select id="marketplaceSelect" name="marketplaceCode">
+            <option value="US">US - Amazon.com</option>
+            <option value="CA">CA - Amazon.ca</option>
+            <option value="UK">UK - Amazon.co.uk</option>
+            <option value="DE">DE - Amazon.de</option>
+            <option value="FR">FR - Amazon.fr</option>
+            <option value="IT">IT - Amazon.it</option>
+            <option value="ES">ES - Amazon.es</option>
+            <option value="JP">JP - Amazon.co.jp</option>
+            <option value="AU">AU - Amazon.com.au</option>
+          </select>
+        </label>
+        <label>站点名称<input id="marketplaceName" name="marketplaceName" value="Amazon US"></label>
+        <label>Amazon 域名<input id="domain" name="domain" value="https://www.amazon.com"></label>
+        <label>邮编/地区<input id="postalCode" name="postalCode" value="10001"></label>
+        <label>搜索深度<input name="maxPages" type="number" min="1" max="10" value="3"></label>
+      </div>
+      <p id="marketHint" class="hint">默认地区：New York, NY。你也可以手动修改域名和邮编。</p>
+
+      <h2>2. 输出方式</h2>
+      <div class="choice-row">
+        <label><input type="radio" name="outputMode" value="excel" checked> 只下载 Excel</label>
+        <label><input type="radio" name="outputMode" value="feishu"> 只写入飞书</label>
+        <label><input type="radio" name="outputMode" value="both"> Excel + 飞书</label>
+      </div>
+      <div class="choice-row">
+        <label><input type="checkbox" name="enrichProductMetrics" checked> 抓取当天价格、BSR、评分、评论数</label>
+        <label><input type="checkbox" name="useSorftime"> 调用 Sorftime MCP 补销量/价格/类目排名</label>
+      </div>
+
+      <h2>3. 手动输入</h2>
+      <div class="grid two">
+        <label>ASIN，可多行；支持 “产品标签,ASIN”
+          <textarea name="asinText" placeholder="示例：产品标签,ASIN；也可以只填 ASIN，一行一个"></textarea>
+        </label>
+        <label>关键词，一行一个
+          <textarea name="keywordText" placeholder="dog crate furniture&#10;wooden dog crate furniture&#10;dog furniture"></textarea>
+        </label>
+      </div>
+
+      <h2>4. 或上传模板</h2>
+      <div class="grid">
+        <label>ASIN模板 CSV/XLSX<input name="asinFile" type="file" accept=".csv,.xlsx,.xls"></label>
+        <label>关键词模板 CSV/XLSX<input name="keywordFile" type="file" accept=".csv,.xlsx,.xls"></label>
+        <label>产品-关键词明细模板 XLSX<input name="pairFile" type="file" accept=".xlsx,.xls"></label>
+      </div>
+
+      <div class="button-row">
+        <button id="runBtn" type="submit">开始抓取</button>
+        <button id="testExcelBtn" type="button" class="secondary">测试导出 Excel</button>
+      </div>
+    </form>
+
+    <section id="progressCard" class="card hidden">
+      <div class="progress-head">
+        <div>
+          <h2 id="progressTitle">准备开始</h2>
+          <p id="progressSub" class="hint">后台隐藏浏览器抓取中，请不要关闭页面。</p>
+        </div>
+        <strong id="progressPct">0%</strong>
+      </div>
+      <div class="progress-bar"><div id="progressFill"></div></div>
+      <div id="resultLinks" class="result-links"></div>
+      <details open>
+        <summary>运行日志</summary>
+        <div id="logBox" class="log"></div>
+      </details>
+    </section>
+
+    <section id="result" class="card hidden"></section>
+  </main>
+  <script src="/app.js"></script>
+</body>
+</html>
